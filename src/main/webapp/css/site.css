@@ -1,0 +1,27 @@
+  
+table, th, td {
+   border: 1px solid black;
+}
+
+td {
+	width: 1px;
+	while-space: nowrap;
+}
+
+table { 
+	table-layout: fixed; width: 50%; 
+}
+
+table tr td, th { border:1px solid #D5D5D5; padding:15px;}
+
+.container {
+	border: 1px solid white;
+	border-radius: 1;
+	padding: 10px;
+}
+
+.aboutContainer {
+	border: 1px solid gray;
+	border-radius: 10px;
+	padding: 15px;
+}

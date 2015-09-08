@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<title>Negative Split Calculator</title>
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="bootstrap/css/journal-bootstrap.min.css"/>                                           
+		<link rel="stylesheet" href="css/site.css"/>
+
+	</head>
+
+
+<body >
+ <div id="page" >
+ 
+	 <header class="container">
+	  <div id="menu" class="navbar">
+	 	<div id="logo">
+		 <ul>
+		  <li><a href="index.html">Home</a></li>
+		  <li><a href="contact.html">Contact</a></li>
+		  <li><a href="about.html">About</a></li>
+		  </ul>
+		</div>  
+   		<div><img src="img/negative-split-calculator.png" class="bordered-image"><strong>Negative Split Calculator for Garmin or GPX files</strong></div>
+   	  </div>
+	</header>
+<section id="body" class="container" >
+   <section id="main" >
+	<div >		
+		<ul type="square">
+			
+				<h4>Steps to calculate negative split</h4>
+				<li>Login into your connect.garmin.com account</li>
+				<li>Select file you wish to analyze</li>
+				<li>Select "Export" and "tcx" or "gpx" format</li>
+				<li>Save to your PC</li>
+				<li>Click on "Choose File" button to select file</li>
+				<li>Click on "Calculate"</li>
+		</ul>
+	</div>
+	</section>
+
+    
+	<div class="btn-group-vertical" >
+		<form method="post" action="UploadServlet"	encType="multipart/form-data" class="simple-form bordered-image">
+	
+			<label for="uploadFile">Select file to upload:</label>
+		   <!-- <a href="=# class="btn btn-default"> <label for="uploadFile"></a>  <-->
+			</br>
+			<span class="btn btn-default"><input type="file" name="uploadFile" id="uploadFile" /> </span>
+			<br></br>
+
+			<input type="submit" class="btn btn-default" value="Calculate"  /></a>
+		</form>
+	</div>
+	
+	</section>
+	<!-- FOOTER  -->
+
+		<footer class="container">
+		<p> &copy; Negative Split Calculator 2015 </p>
+		                                                                                 
+		</footer>
+
+</div>
+<script src="bootstrap/js/jquery-2.0.3.min.js"></script>
+<script src="bootstrap/js/boot"></script>
+</body>
+</html>

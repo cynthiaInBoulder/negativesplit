@@ -27,8 +27,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.cvf.negsplit.filestore.FileStore;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.Interval;
-import org.w3c.dom.Node;
 
 /**
  * Servlet implementation class UploadServlet
@@ -36,6 +34,14 @@ import org.w3c.dom.Node;
 public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private static final String POSITIVE = "Positive Split";
+	private static final String NEGATIVE = "Negative Split";
+	private static final String INVALID_FILE_TYPE = " file must be tcx or gpx file";
+	private static final String DISTANCE_EST_MSG = "*Using Distance Estimate - last gps trackpoint did not contain distance info";
+	private static final String INVALID_FILE = "<strong> Input file is missing required elements per Garmin's schema.  <br></br>Please use different file</a></strong>";
+	private static final String NO_VALID_DISTANCE = "<strong> file does not have a valid trackpoint for total distance <br></br> unable to calculate negative split</strong>";
+	
+	
 	// this will store the uploaded files
 	private static List<FileStore> files = new LinkedList<FileStore>();
 
@@ -56,57 +62,74 @@ public class UploadServlet extends HttpServlet {
 
 		try {
 
-		int noOfFiles = files.size();
-		for (int i = 0; i < noOfFiles; i++) {
+			int noOfFiles = files.size();
+			for (int i = 0; i < noOfFiles; i++) {
 
 			String filePath = (files.get(i).getFileName()).toLowerCase();
 		
 			// Verify valid file type
 			if (filePath.endsWith("tcx") || filePath.endsWith("gpx")) {
 				InputStream xmlFile = files.get(i).getContent();
-				
+					
 				// Load data file into objects
 				JAXBContext jaxbContext = JAXBContext.newInstance(TrainingCenterDatabase.class);
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				TrainingCenterDatabase tcd = (TrainingCenterDatabase) jaxbUnmarshaller.unmarshal(xmlFile);
-
+				
 				// Trackpoints are embedded in Lap objects - extract all TrackPoints to separate List
-				List<Trackpoint> tpList = new ArrayList<Trackpoint>();
-
-				Activity laps = tcd.getActivities().getActivity();
-				int totalNoLaps = tcd.getActivities().getActivity().getLap().size();
-				extractTrackPointsFromLaps(laps, totalNoLaps, tpList);
+				List<Trackpoint> tpList = buildTrackpointList(tcd); 		
 
 				// Determine actual midpoint by distance
 				int actualMidPoint = calculateMidPointDistanceElement(tpList);
 
-				// Return Race Results Object to jsp
-				Results resultsData =  calcualteResults(actualMidPoint, tpList);
-			
-				request.setAttribute("resultsData", resultsData );
-				request.getRequestDispatcher("/result.jsp").forward(request, response);
+				// Check for valid midpoint
+				if (actualMidPoint > 0){
+					// Return Race Results Object to jsp
+					Results resultsData =  calcualteResults(actualMidPoint, tpList);		
+					request.setAttribute("resultsData", resultsData );
+					request.getRequestDispatcher("/result.jsp").forward(request, response);
+				}
+				else{
+					request.setAttribute("message", NO_VALID_DISTANCE);
+					request.getRequestDispatcher("/error.jsp").forward(request, response);
+				}
 			
 			} else {
-				request.setAttribute("message", filePath + " file must be tcx or gpx file");
+				request.setAttribute("message", filePath + INVALID_FILE_TYPE);
 				request.getRequestDispatcher("/error.jsp").forward(request, response);
 				}
 			}
+		}
+		catch (Exception e) {
+			
+		String errorString = e.getMessage();
+	
+	     if (errorString == null || errorString.contains("null") ||errorString.contains("empty String")){
+			request.setAttribute("message", INVALID_FILE);
+	     }
+	     request.getRequestDispatcher("/error.jsp").forward(request, response);
+		}
 		
+		finally{
 			//  Clear list of imported files after response sent to browser
 			files.clear();
 		}
-		catch (Exception e) {
-			request.setAttribute("message", " fatal error  - process aborted");
-			request.getRequestDispatcher("/error.jsp").forward(request, response);
-			e.printStackTrace();
-		}
-
-		
-	
 
 	}
 
-	public static void extractTrackPointsFromLaps(Activity laps, int totalNoLaps, List<Trackpoint> tpList) {
+	
+	public static List<Trackpoint> buildTrackpointList(TrainingCenterDatabase tcd){
+	
+		List<Trackpoint> tpList =	new ArrayList<Trackpoint>();
+
+		Activity laps = tcd.getActivities().getActivity();
+		int totalNoLaps = tcd.getActivities().getActivity().getLap().size();
+		extractTrackPointDataFromLaps(laps, totalNoLaps, tpList);
+		
+	    return tpList;    
+	}
+	
+	public static void extractTrackPointDataFromLaps(Activity laps, int totalNoLaps, List<Trackpoint> tpList) {
 		int k = 0;
 
 		for (int i = 0; i < totalNoLaps; i++) {
@@ -127,14 +150,12 @@ public class UploadServlet extends HttpServlet {
 		boolean scanUp = false;
 		boolean scanDown = false;
 
-		int noOfTrackpoints = tpList.size();
-		int approxHalfwayPoint = noOfTrackpoints / 2;
+		int approxHalfwayPoint = (tpList.size() - 1) / 2;
 
 		// Current distance midpoint in TrackPoint data was calculated by taking
 		// 1/2 the number of <TrackPoint> elements
 		// Due to races not run on even splits we need to find the midpoint by
 		// distance
-
 		String currentMidPointContainsMetersData = (tpList
 				.get(approxHalfwayPoint)).getDistanceMeters();
 
@@ -142,26 +163,31 @@ public class UploadServlet extends HttpServlet {
 		// meters - do not want to compare Strings
 		double currentMP = Double.valueOf(currentMidPointContainsMetersData);
 
+		// Validate activity file contains a valid total distance meter value
+		int	lastTrackpoint = validLastTrackpoint(tpList);
+
 		// Calculate true midpoint distance
-		double totalDistanceInMeters = Double.parseDouble(tpList.get(
-				noOfTrackpoints - 1).getDistanceMeters());
+		double totalDistanceInMeters = Double.parseDouble(tpList.get(lastTrackpoint).getDistanceMeters());
 		double validDistanceMidPoint = totalDistanceInMeters / 2;
 
 		// Set boolean to determine whether to scan up or scan down for actual
 		// mid point
-		if (currentMP > validDistanceMidPoint) {
+		if (currentMP == validDistanceMidPoint){
+			return elementCount = approxHalfwayPoint;
+		}
+		else if (currentMP > validDistanceMidPoint) {
 			scanDown = true;
-		} else if (currentMP < validDistanceMidPoint) {
+		} 
+		else {
 			scanUp = true;
 		}
 
-		// TODO - can this be made into a more efficient search
-		for (int i = approxHalfwayPoint; i <= noOfTrackpoints;) {
+		// Start at approxHalfwayPoint and work you way down based on scan boolean
+		for (int i = approxHalfwayPoint; i <= lastTrackpoint && i >= 0;) {
 			// Break out of loop. When scan up and currentMP >= or scan down and
 			// current <= that means the distancemeter value closest to the
-			// validMidPoint has been found
-			if (currentMP >= validDistanceMidPoint && scanUp
-					|| currentMP <= validDistanceMidPoint && scanDown) {
+			// validMidPoint has been found 
+			if (currentMP >= validDistanceMidPoint && scanUp || currentMP <= validDistanceMidPoint && scanDown) {
 				break;
 			}
 			if (scanUp)
@@ -183,9 +209,12 @@ public class UploadServlet extends HttpServlet {
 	
 	public static Results calcualteResults(int midPointIndex, List<Trackpoint> tpList) {
 
+
+		// Get index for the total distance meter value
+		int indexLastElement = 	validLastTrackpoint(tpList);
+	 
 		XMLGregorianCalendar st = tpList.get(0).getTime();
 		XMLGregorianCalendar mpt = tpList.get(midPointIndex).getTime();
-		int indexLastElement = tpList.size() - 1;
 		XMLGregorianCalendar et = tpList.get(indexLastElement).getTime();
 
 		Date tmpStartDate = st.toGregorianCalendar().getTime();
@@ -203,31 +232,30 @@ public class UploadServlet extends HttpServlet {
 		double metersFirstHalf = Double.valueOf(tpList.get(midPointIndex).getDistanceMeters());
 		double metersLastHalf = (metersTotalDistance - metersFirstHalf);
 
-		int percentage = 0;
+		
 		int result = compareDurationTimes(firstHalf, lastHalf);
 		Results raceResult = new Results();
-		String totalDurationTime = convertMsToTime(totalDuration.getMillis());
-		String firstHalfTime = convertMsToTime(firstHalf.getMillis());
-		String lastHalfTime = convertMsToTime(lastHalf.getMillis());
-		
-	
 
 		raceResult.setTotalDistance(convertMetersToMiles(metersTotalDistance));
 		raceResult.setTotalTime(convertMsToTime(totalDuration.getMillis()));
-		raceResult.setTime1stHalf(firstHalfTime = convertMsToTime(firstHalf.getMillis()));
+		raceResult.setTime1stHalf(convertMsToTime(firstHalf.getMillis()));
 		raceResult.setDistance1stHalf(convertMetersToMiles(metersFirstHalf));
 		raceResult.setDistance2ndHalf(convertMetersToMiles(metersLastHalf));
-		raceResult.setTime2ndHalf(lastHalfTime = convertMsToTime(lastHalf.getMillis()));
+		raceResult.setTime2ndHalf(convertMsToTime(lastHalf.getMillis()));
+
+		if (indexLastElement < (tpList.size() - 1)){
+			raceResult.setEstDist(DISTANCE_EST_MSG);
+		}
 		
 		int percent = 0;
 		if (result < 0){
-			raceResult.setResult("Positive Split");
+			raceResult.setResult(POSITIVE);
 			long diff = firstHalf.minus(lastHalf).getMillis();
 			raceResult.setSplit(convertMsToTime(diff));
 			percent =  (int) (lastHalf.getMillis() * 100.0 / firstHalf.getMillis() + 0.5);	
 		}
 		else{
-			raceResult.setResult("Negative Split");
+			raceResult.setResult(NEGATIVE); 
 			long diff2 = firstHalf.minus(lastHalf).getMillis();
 			raceResult.setSplit(convertMsToTime(diff2));
 			percent =  (int) (lastHalf.getMillis() * 100.0 / firstHalf.getMillis() + 0.5);	
@@ -237,8 +265,24 @@ public class UploadServlet extends HttpServlet {
 		
 		return raceResult;
 	}
-
-
+	
+	public static int validLastTrackpoint(List<Trackpoint> tpList)
+	{
+		int lastTrackpoint = 0;
+		int noOfTrackpoints = tpList.size() -1;
+		
+	    // Check to see if last trackpoint contains distanceMeters element
+		// if not - go back one trackpoint until distanceMeters element is found
+		for (int i = noOfTrackpoints; i > 0; i--){
+			if (tpList.get(i).getDistanceMeters() != null){
+				lastTrackpoint = i;
+				break;
+			}
+		}
+			
+		return lastTrackpoint;
+	}
+	
 	public static int compareDurationTimes(Duration firstHalf, Duration lastHalf) {
 		return firstHalf.compareTo(lastHalf);
 	}

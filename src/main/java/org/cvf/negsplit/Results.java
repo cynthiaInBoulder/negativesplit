@@ -11,7 +11,14 @@ public class Results {
 	private String result;
 	private String split;
 	private int percentage;
+	private String estDist;
 	
+	public String getEstDist() {
+		return estDist;
+	}
+	public void setEstDist(String estDist) {
+		this.estDist = estDist;
+	}
 	public String getTime2ndHalf() {
 		return time2ndHalf;
 	}

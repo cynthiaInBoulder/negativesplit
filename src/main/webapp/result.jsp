@@ -1,5 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=utf-8" language="java"%>
+<%@ page isELIgnored="false" %>
 
 <html>
     <head>
@@ -39,9 +40,11 @@
 		<th> Result</th>
 		<th> Time Difference</th>
 		<th> Percent Difference</th>
+		
 	</tr>
 
-	<tr>
+	<tr>    
+
     	<td>${resultsData.totalDistance}</td>
     	<td>${resultsData.totalTime }</td>
     	<td>${resultsData.distance1stHalf }</td>
@@ -51,10 +54,15 @@
     	<td>${resultsData.result }</td>
     	<td>${resultsData.split }</td>
     	<td>${resultsData.percentage }%</td>
+    	
+    	
 	</tr>
+ 	</table>
+ 	
+ 	<p>${resultsData.estDist}</p>
+ 
+ 
 
-	
-</table>
 </div>
 	
 </body>

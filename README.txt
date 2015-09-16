@@ -4,6 +4,8 @@ Could not find a calculator online that would analyze a gps file to determine if
 
 First implementation will upload a Garmin .tcx file and determine if negative split.
 
+Added error handling. tcx files do not always contain distance data in last gps trackpoint
+
 TODO: 
 Add functionality for .gpx files
 Add functionality to handle multisport files

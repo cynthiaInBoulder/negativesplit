@@ -6,6 +6,15 @@ First implementation will upload a Garmin .tcx file and determine if negative sp
 
 Added error handling. tcx files do not always contain distance data in last gps trackpoint
 
+App currently deployed on a Linux server on Linode- accessible via: http://45.79.142.127:8080/negativesplit/
+
+Sample test files to use in this directory:
+eugeneMarathonPosSplit.tcx
+indyMarathonNegSplit.tcx
+moablHalfPosSplit.tcx
+moabHalfNegSplit.tcs
+
+
 TODO: 
 Add functionality for .gpx files
 Add functionality to handle multisport files

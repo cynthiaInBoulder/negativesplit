@@ -1,0 +1,19 @@
+{
+  "name": "d-bootstrap-child",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-autoprefixer": "^2.3.1",
+    "gulp-less": "^3.0.3"
+  },
+  "devDependencies": {
+    "gulp-plumber": "^1.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/dmagazine/wp-common"
+  }
+}

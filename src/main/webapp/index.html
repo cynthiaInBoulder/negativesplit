@@ -1,70 +1,101 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		
-		<title>Negative Split Calculator</title>
-		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="bootstrap/css/journal-bootstrap.min.css"/>                                           
-		<link rel="stylesheet" href="css/site.css"/>
 
-	</head>
+    <head>
+        
+        <title>Negative Split Calculator</title>
+        <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300italic,300,400italic,600,600italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Signika:600' rel='stylesheet' type='text/css'>
+        
+        <link rel="stylesheet" href="css/normalize.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
 
+    </head>
 
-<body >
- <div id="page" >
- 
-	 <header class="container">
-	  <div id="menu" class="navbar">
-	 	<div id="logo">
-		 <ul>
-		  <li><a href="index.html">Home</a></li>
-		  <li><a href="contact.html">Contact</a></li>
-		  <li><a href="about.html">About</a></li>
-		  </ul>
-		</div>  
-   		<div><img src="img/negative-split-calculator.png" class="bordered-image"><strong>Negative Split Calculator for Garmin or GPX files</strong></div>
-   	  </div>
-	</header>
-<section id="body" class="container" >
-   <section id="main" >
-	<div >		
-		<ul type="square">
-			
-				<h4>Steps to calculate negative split</h4>
-				<li>Login into your connect.garmin.com account</li>
-				<li>Select file you wish to analyze</li>
-				<li>Select "Export" and "tcx" or "gpx" format</li>
-				<li>Save to your PC</li>
-				<li>Click on "Choose File" button to select file</li>
-				<li>Click on "Calculate"</li>
-		</ul>
-	</div>
-	</section>
+<body>
+ <div id="page" class="page-wrapper">
+    <header class="header-wrapper container clearfix">
+        <div class="header">
+            <div class="navbar-wrapper clearfix">
+                <ul class="navbar">
+                    <li class="menu-item"><a href="index.html">Home</a></li>
+                    <li class="menu-item"><a href="contact.html">Contact</a></li>
+                    <li class="menu-item"><a href="about.html">About</a></li>
+                </ul>
+            </div>
+            <div id="logo">
+                <img src="img/negative-split-calculator.png" class="bordered-image calculator-logo">
+                <h1>Negative Split Calculator <span>for Garmin or GPX files</span></h1>
+            </div>
+        </div>
+    </header>
 
+    <section id="body" class="wrapper clearfix" >
+   
+        <div class="btn-group-vertical clearfix" >
+            <form method="post" action="UploadServlet"  encType="multipart/form-data" class="simple-form bordered-image">
+        
+                <!-- <label for="uploadFile">Select file to upload:</label> -->
+               <!-- <a href="=# class="btn btn-default"> <label for="uploadFile"></a>  <-->
+                <!-- </br> -->
+
+                <input type="file" name="uploadFile" id="uploadFile" class="inputfile" data-multiple-caption="{count} files selected" multiple  /><label for="uploadFile"><span>Choose a file</span></label>
+
+                <!-- <span class="btn btn-default">
+                    <input type="file" name="uploadFile" id="uploadFile" />
+                </span>
+     -->
+                <input type="submit" class="btn btn-default" value="Calculate"  />
+            </form>
+        </div>
+        
+        <h4>Instructions</h4>
+       <section id="main" class="white-box">
+        <div>      
+            <ul class="instructions">
+                <li>Login into your connect.garmin.com account</li>
+                <li>Select file you wish to analyze</li>
+                <li>Select "Export" and "tcx" or "gpx" format</li>
+                <li>Save to your PC</li>
+                <li>Click on "Choose File" button to select file</li>
+                <li>Click on "Calculate"</li>
+            </ul>
+        </div>
+        </section>
     
-	<div class="btn-group-vertical" >
-		<form method="post" action="UploadServlet"	encType="multipart/form-data" class="simple-form bordered-image">
-	
-			<label for="uploadFile">Select file to upload:</label>
-		   <!-- <a href="=# class="btn btn-default"> <label for="uploadFile"></a>  <-->
-			</br>
-			<span class="btn btn-default"><input type="file" name="uploadFile" id="uploadFile" /> </span>
-			<br></br>
+    </section>
+</div><!-- /page-wrapper -->
+<!-- FOOTER  -->
 
-			<input type="submit" class="btn btn-default" value="Calculate"  /></a>
-		</form>
-	</div>
-	
-	</section>
-	<!-- FOOTER  -->
+<footer class="container">
+    <p>&copy; Negative Split Calculator 2015</p>
+</footer>
 
-		<footer class="container">
-		<p> &copy; Negative Split Calculator 2015 </p>
-		                                                                                 
-		</footer>
-
-</div>
 <script src="bootstrap/js/jquery-2.0.3.min.js"></script>
 <script src="bootstrap/js/boot"></script>
+
+<script>
+
+var inputs = document.querySelectorAll( '.inputfile' );
+Array.prototype.forEach.call( inputs, function( input )
+{
+    var label    = input.nextElementSibling,
+        labelVal = label.innerHTML;
+
+    input.addEventListener( 'change', function( e )
+    {
+        var fileName = '';
+        if( this.files && this.files.length > 1 )
+            fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
+        else
+            fileName = e.target.value.split( '\\' ).pop();
+
+        if( fileName )
+            label.querySelector( 'span' ).innerHTML = fileName;
+        else
+            label.innerHTML = labelVal;
+    });
+});
+</script>
 </body>
 </html>

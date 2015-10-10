@@ -294,7 +294,7 @@ table td:last-child {
   border-bottom-right-radius: 20px;
 }
 caption {
-  font-size: 16px;
+  font-size: 25px;
   font-weight: 600;
   color: white;
   background-color: #929393;
@@ -381,7 +381,7 @@ caption {
   font-size: 20px;
   font-weight: 600;
   float: left;
-  text-align: right;
+  text-align: left;
   line-height: 60px;
   width: 100%;
 }

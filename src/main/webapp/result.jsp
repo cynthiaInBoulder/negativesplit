@@ -67,22 +67,24 @@
 		</tr> -->
 
 		<table class="table-full">
-			<caption>Results</caption>
+			<caption>Activity Results:  ${resultsData.result } </caption>
 			<tr><td>
 				<div class="results-wrapper">
-					<div class="results-time">
-						<p>First Half</p>
-					</div>
+			
+				<!-- <div class="results-time">
+						 <p>First Half</p> 
+					<p >${resultsData.result } Split<p>
+					</div>   -->
 					<div class="results-number">
-						<p>${resultsData.time1stHalf}</p>
+						<p>Elasped First half time:    ${resultsData.time1stHalf}</p>
 					</div>
 				</div>
 				<div class="results-wrapper">
-					<div class="results-time">
+			<!--			<div class="results-time">
 						<p>Second Half</p>
-					</div>
+					</div>  -->
 					<div class="results-number">
-						<p>${resultsData.time2ndHalf }</p>
+						<p>Elasped Second half time:  ${resultsData.time2ndHalf }</p>
 					</div>
 				</div>
 				<div class="results-total">
@@ -98,7 +100,7 @@
 				<td>
 					<span class="table-subhead">50%</span>
 					<span class="table-result">${resultsData.distance1stHalf }</span>
-					<span class="table-label">hr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sec</span>
+					<span class="table-label">mi</span>
 				</td>
 				<td>
 					<span class="table-subhead">100%</span>

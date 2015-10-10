@@ -8,7 +8,9 @@ Added error handling. tcx files do not always contain distance data in last gps 
 
 App currently deployed on a Linux server on Linode- accessible via: http://45.79.142.127:8080/negativesplit/
 
-Sample test files to use in this directory:
+If the above url isn't accessible - I also have a test version deployed on AWS: http://negativesplit-test.elasticbeanstalk.com/
+
+Sample test files to use:
 eugeneMarathonPosSplit.tcx
 indyMarathonNegSplit.tcx
 moablHalfPosSplit.tcx

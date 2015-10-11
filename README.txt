@@ -6,9 +6,9 @@ First implementation will upload a Garmin .tcx file and determine if negative sp
 
 Added error handling. tcx files do not always contain distance data in last gps trackpoint
 
-App currently deployed on a Linux server on Linode- accessible via: http://45.79.142.127:8080/negativesplit/
+App currently deployed on a Linux server on Linode- accessible via: 
+www.negativesplitcalculator.com
 
-If the above url isn't accessible - I also have a test version deployed on AWS: http://negativesplit-test.elasticbeanstalk.com/
 
 Sample test files to use:
 eugeneMarathonPosSplit.tcx

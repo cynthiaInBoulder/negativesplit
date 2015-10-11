@@ -115,7 +115,7 @@
 			<tr>
 				<td>
 					<span class="table-result">${resultsData.split }</span>
-					<span class="table-label">mi</span>
+					<span class="table-label">>hr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sec</span>
 				</td>
 				<td>
 					<span class="table-result">${resultsData.percentage }%</span>

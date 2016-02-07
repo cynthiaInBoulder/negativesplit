@@ -12,7 +12,16 @@
         
         <link rel="stylesheet" href="css/normalize.css"/>
         <link rel="stylesheet" href="css/style.css"/>
-
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-68638884-1', 'auto');
+	  ga('send', 'pageview');
+	
+	</script>
     </head>
 
 <body>
@@ -95,15 +104,16 @@
 		</table>
 
 	 	<table class="table-half table-left">
-			<caption>Distance</caption>
+			<caption>Total Distance: ${resultsData.totalDistance } mi</span>
+			</caption>
 			<tr>
 				<td>
-					<span class="table-subhead">50%</span>
+					<span class="table-subhead">1st half dist</span>
 					<span class="table-result">${resultsData.distance1stHalf }</span>
 					<span class="table-label">mi</span>
 				</td>
 				<td>
-					<span class="table-subhead">100%</span>
+					<span class="table-subhead">2nd half dist</span>
 					<span class="table-result">${resultsData.distance2ndHalf }</span>
 					<span class="table-label">mi</span>
 				</td>
@@ -115,7 +125,7 @@
 			<tr>
 				<td>
 					<span class="table-result">${resultsData.split }</span>
-					<span class="table-label">>hr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sec</span>
+					<span class="table-label">hr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sec</span>
 				</td>
 				<td>
 					<span class="table-result">${resultsData.percentage }%</span>

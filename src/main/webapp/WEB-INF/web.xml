@@ -4,11 +4,11 @@
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
-    <servlet>
+  <servlet>
     <description></description>
     <display-name>UploadServlet</display-name>
     <servlet-name>UploadServlet</servlet-name>
-    <servlet-class>org.cvf.negsplit.UploadServlet</servlet-class>
+    <servlet-class>com.cvf.controller.UploadServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>

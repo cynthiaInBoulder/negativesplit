@@ -1,3 +1,14 @@
+UPDATE:  1/26/2016
+
+Refactored code to extract business logic from Servlet.  Created ResultsService and FileHandlerService interfaces and 
+associated implementations.   
+
+UploadServlet code went from 300+ lines of code to less than 100+. Easier to read and maintain.  Will be easier to write test cases
+
+Next step is to convert this application to SpringMVC framework/pattern.
+
+
+Original Info:
 This web app will calculate the halfway distance of an activity to determine if activity was a negative split.
 Why negative split?
 Could not find a calculator online that would analyze a gps file to determine if an activity was a negative split.
